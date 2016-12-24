@@ -10,7 +10,6 @@
   ],
   "exclude": [
     "build",
-    "node_modules",
-    "**/*.spec.ts"
+    "node_modules"
   ]
 }

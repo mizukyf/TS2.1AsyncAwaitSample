@@ -1,5 +1,3 @@
-/// <reference path="../../node_modules/@types/jquery/index.d.ts" />
-
 // jQueryをロードする（実際にはロジック内で使用していないので最終的なビルド成果物にコードは含まれない）
 import * as $ from 'jquery';
 // ES6より前の環境でasync/awaitを使うため前提となるポリフィルをロードする
@@ -8,19 +6,17 @@ import {polyfill} from 'es6-promise';
 polyfill();
 
 // コンソールにあいさつを出力するだけのクラス
-class Greeter {
-  private x : string;
-  constructor(x : string) {
-    this.x = x;
+export class Greeter {
+  constructor(public message : string) {
   }
   greet() : void {
     // 同期的にあいさつを出力
-    console.log(this.x);
+    console.log(this.message);
   }
   async greetAsync() {
     // Promiseのコンストラクタに渡たす関数内のスコープでは
     // thisの意味が変わってしまうため、xをローカル変数にアサイン
-    var x = this.x;
+    var x = this.message;
     // Promiseのインスタンスを生成する
     var p = new Promise<string>(function(resolve, reject) {
       // 1秒待機したのちただちにresolve(string)を呼び出す
