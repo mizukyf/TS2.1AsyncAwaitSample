@@ -10,7 +10,6 @@ var source = require('vinyl-source-stream');
 var sourcemaps = require('gulp-sourcemaps');
 var tsconfig = require('./tsconfig.json');
 var tsify = require('tsify');
-var typescript = require('gulp-typescript');
 var uglify = require('gulp-uglify');
 var watchify = require('watchify');
 

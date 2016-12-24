@@ -1,5 +1,4 @@
 /// <reference path="../../node_modules/@types/jquery/index.d.ts" />
-/// <reference path="../../node_modules/@types/es6-promise/index.d.ts" />
 
 // jQueryをロードする（実際にはロジック内で使用していないので最終的なビルド成果物にコードは含まれない）
 import * as $ from 'jquery';

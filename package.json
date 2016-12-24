@@ -9,7 +9,6 @@
   "license": "ISC",
   "private": true,
   "devDependencies": {
-    "@types/es6-promise": "0.0.32",
     "@types/jquery": "^2.0.34",
     "browserify": "^13.1.1",
     "del": "^2.2.2",
