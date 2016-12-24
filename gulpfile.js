@@ -1,57 +1,58 @@
-// https://github.com/gulpjs/gulp/blob/master/docs/recipes/browserify-uglify-sourcemap.md
 'use strict';
 
 var browserify = require('browserify');
-var gulp = require('gulp');
-var del = require('del');
-var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
-var uglify = require('gulp-uglify');
-var sourcemaps = require('gulp-sourcemaps');
+var del = require('del');
+var gulp = require('gulp');
 var gutil = require('gulp-util');
 var rename = require("gulp-rename");
-var typescript = require('gulp-typescript');
+var source = require('vinyl-source-stream');
+var sourcemaps = require('gulp-sourcemaps');
+var tsconfig = require('./tsconfig.json');
 var tsify = require('tsify');
+var typescript = require('gulp-typescript');
+var uglify = require('gulp-uglify');
+var watchify = require('watchify');
 
-gulp.task('default', ['copy'], function () {
-  // set up the browserify instance on a task basis
-  var b = browserify({
-    entries: 'build/ts/main.ts',
-    debug: true
-  }).plugin(tsify);
+gulp.task('clean', () => del(['build']));
+gulp.task('copy', () => gulp.src(['src/**/*.html']).pipe(gulp.dest('build')));
+gulp.task('default', ['copy'], buildTask(false));
+gulp.task('watch', ['copy'], buildTask(true));
 
-  return b.bundle()
-    .pipe(source('app.js'))
-    .pipe(buffer())
-    .pipe(sourcemaps.init({loadMaps: true}))
-        // Add transformation tasks to the pipeline here.
-        .pipe(uglify())
-        .pipe(rename({suffix: '.min'}))
-        .on('error', gutil.log)
-    .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest('build/js'));
-});
+function buildTask (watch) {
+  // タスク本体となる関数を生成して呼び出し元に返す
+  return () => {
+    // Browserifyのインスタンスを初期化する
+    // Tsifyプラグインを追加する
+    var b = browserify({
+      entries: 'src/es/main.ts',
+      debug: true
+    })
+    .plugin(tsify, tsconfig);
 
-//
-// var gulp = require('gulp');
-// // var browserify = require('browserify');
-// var concat = require('gulp-concat');
-// var del = require('del');
-// // var uglify = require("gulp-uglify");
-//
-gulp.task('typescript', ['copy'], function() {
-  return gulp.src('build/ts/*.ts')
-    .pipe(sourcemaps.init({loadMaps: true}))
-    .pipe(typescript())
-    .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest('build/js'))
-});
+    // buildTaskの第1引数にtrueが渡された場合
+    // Watchifyプラグインを追加する
+    if (watch) b.plugin(watchify);
 
-gulp.task('copy', function() {
-  return gulp.src(['src/**/*.html', 'src/**/*.ts'])
-    .pipe(gulp.dest('build'));
-});
+    // Browserifyにより実行時依存性解決されたJSファイルを
+    // UglifyJSやsourcemapsにより変換する
+    var f = () => b
+      .bundle()
+      .pipe(source('app.js'))
+      .pipe(buffer())
+      .pipe(sourcemaps.init({loadMaps: true}))
+          .pipe(uglify())
+          .pipe(rename({suffix: '.min'}))
+          .on('error', gutil.log)
+      .pipe(sourcemaps.write('./'))
+      .pipe(gulp.dest('build/es'));
 
-gulp.task('clean', function() {
-  del(['build']);
-})
+    // buildTaskの第1引数にtrueが渡された場合
+    // 'update'イベントのリスナー関数としてfを追加する
+    if (watch) b.on('update', f);
+
+    // 初回の変換処理を行う
+    // buildTaskの第1引数にfalseが渡された場合これでタスクは完了
+    return f();
+  };
+}

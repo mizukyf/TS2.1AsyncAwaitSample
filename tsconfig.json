@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "noImplicitAny" : true,
+    "sourceMap": true,
+    "target": "es3",
+    "lib": ["dom", "es2015.promise"]
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "build/**/*.ts",
+    "node_modules/**/*",
+    "**/*.spec.ts"
+  ]
+}
