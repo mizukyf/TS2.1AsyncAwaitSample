@@ -9,8 +9,8 @@
     "src/**/*"
   ],
   "exclude": [
-    "build/**/*.ts",
-    "node_modules/**/*",
+    "build",
+    "node_modules",
     "**/*.spec.ts"
   ]
 }
