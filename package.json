@@ -1,7 +1,7 @@
 {
-  "name": "hellots21",
+  "name": "sample",
   "version": "1.0.0",
-  "description": "Hello TypeScript v2.1",
+  "description": "A sample project for async/await of TypeScript v2.1",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
