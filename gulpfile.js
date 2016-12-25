@@ -92,7 +92,7 @@ gulp.task('_watchExceptTs', ['_watchTs'], () => {
 });
 // *.tsファイルの変更を検知してトランスパイルと実行時依存性解決を行うタスク
 // NOTE: ビルド処理は'_bundleTs'と同じ設定で行われる
-gulp.task('_watchTs', _bundleTsTask(true));
+gulp.task('_watchTs', ['_copyAllResources'], _bundleTsTask(true));
 
 function _bundleTsTask (watch) {
   // タスク本体となる関数を生成して呼び出し元に返す
@@ -127,11 +127,10 @@ function _bundleTsTask (watch) {
       b.plugin(watchify)
       .on('error', (err) => { gutil.log(err); this.emit('end'); })
       .on('update', f);
+    } else {
+      // それ以外の場合はただちにバンドルを行って終わり
+      f();
     }
-
-    // 初回の変換処理を行う
-    // buildTaskの第1引数にfalseが渡された場合これでタスクは完了
-    return f();
   };
 }
 

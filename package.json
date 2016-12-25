@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A sample project for async/await of TypeScript v2.1",
   "author": "mizuky fujitani",
-  "license": "ISC",
+  "license": "MIT",
   "private": true,
   "devDependencies": {
     "@types/jasmine": "^2.5.38",
