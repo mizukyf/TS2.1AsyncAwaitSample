@@ -6,7 +6,7 @@ TypeScript v2.1を使用してWebアプリケーション開発を行うため�
 
 * [TypeScript v2.1](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-1.html)の _"Downlevel Async Functions"_ を利用できる
 * TypeScriptコーディングにはIDEを使わず[Atom](https://atom.io/)や[VS Code](https://code.visualstudio.com/)のみを使用する
-* AtomとGulpで同じ`tscondfig.json`を使用させる
+* Atomと[Gulp](http://gulpjs.com/)で同じ`tscondfig.json`を使用させる
 * Atomだけでも最低限TypeScriptのトランスパイルを行えるようにする
 * Atomによるコード編集とビルドには[atom-typescript](https://atom.io/packages/atom-typescript)パッケージを使う
 * ES3（ECMAScript第3版）をビルド・ターゲットとする
