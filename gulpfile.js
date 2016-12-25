@@ -31,6 +31,8 @@ paths.srcMainAllTs = concatPath(paths.srcMainJsDir, '**', '*.ts');
 paths.srcMainAllResources = concatPath(paths.srcMain, '**', '*');
 paths.srcMainAllJsMap = concatPath(paths.srcMain, '**', '*.js.map');
 paths.srtTestAllSpecTs = concatPath(paths.srcTest, '**', '*.spec.ts');
+paths.srcTestAllJs = concatPath(paths.srcTest, '**', '*.js');
+paths.srcTestAllJsMap = concatPath(paths.srcTest, '**', '*.js.map');
 paths.copiedResoucesDir = paths.targetMain;
 paths.bundledJsOutDir = paths.srcMainJsDir;
 paths.bundledJsOutName = 'app.js';
@@ -41,7 +43,8 @@ gulp.task('default', ['build']);
 gulp.task('build', ['_copyAllResources']);
 // *.jsや*.js.mapファイルを削除するタスク
 gulp.task('clean', () => {
-  del([paths.srcMainAllJs, paths.srcMainAllJsMap]);
+  del([paths.srcMainAllJs, paths.srcMainAllJsMap,
+    paths.srcTestAllJs, paths.srcTestAllJsMap]);
 });
 gulp.task('test', ['_testTs']);
 // ファイルの変更を検知してビルドを行うタスク
