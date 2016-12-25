@@ -1,17 +1,18 @@
 # TS2.1AsyncAwaitSample
 
-TypeScript v2.1を使用してWebアプリケーション開発を行うための雛形プロジェクトです。TypeScriptの同バージョンで導入された _"Downlevel Async Functions"_ の機能を利用してみようという意図のもと作成されました。
+TypeScript v2.1を使用してWebアプリケーション開発を行うための雛形プロジェクトです。`npm`と`gulp`コマンドが実行できる環境さえあれば、TypeScript v2.1のコードを使った開発を始められます。
 
-## 要件もしくは制限
+このプロジェクトはTypeScriptの同バージョンで導入された _"Downlevel Async Functions"_ の機能を利用してみようという単純な動機のもとで作成されました。とはいえ、開発者の好みの問題として、Visual StudioやWebStormのようなIDEへの非依存とMavenとの共存も外せない条件でしたので、最終的に以下のような要件もしくは制限事項のもと作成されることになりました：
 
-* TypeScriptコーディングにはIDEを使わずAtomやVS Codeのみを使用する
-* AtomとGulpで同じtscondfig.jsonを使用させる
+* [TypeScript v2.1](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-1.html)の _"Downlevel Async Functions"_ を利用できる
+* TypeScriptコーディングにはIDEを使わず[Atom](https://atom.io/)や[VS Code](https://code.visualstudio.com/)のみを使用する
+* AtomとGulpで同じ`tscondfig.json`を使用させる
 * Atomだけでも最低限TypeScriptのトランスパイルを行えるようにする
-* Atomによるコード編集とビルドにはatom-typescriptパッケージを使う
+* Atomによるコード編集とビルドには[atom-typescript](https://atom.io/packages/atom-typescript)パッケージを使う
 * ES3（ECMAScript第3版）をビルド・ターゲットとする
-* ES6（ES2015。ECMAScript第6版）のPromise/A+をポリフィルにより導入する
-* Browserifyによりバンドル（実行時依存性の自動的・静的解決）を行う
-* Mavenとの共存を前提としたディレクトリ構成をとる
+* ES6（ES2015。ECMAScript第6版）のPromise/A+を[ポリフィル](https://github.com/stefanpenner/es6-promise)により導入する
+* [Browserify](http://browserify.org/)によりバンドル（実行時依存性の自動的・静的解決）を行う
+* [Maven](https://maven.apache.org/)との共存を前提としたディレクトリ構成をとる
 * 開発者は`main.ts`もしくはそこからインポートされる`*.ts`ファイルのみコーディングする
 * 画面側はトランスパイルおよびバンドルの成果物`app.min.js`ファイルをロードする
 
