@@ -45,14 +45,14 @@ _NOTE:_ テスト実行に際しては、`*.ts`ファイルはトランスパイ
 ```
 ├── gulpfile.js   ← Gulpのタスク定義ファイル
 ├── node_modules  ← npmにより管理されている外部モジュールのファイル
-│   ├── @types    ← TypeScriptの型定義（アンビエント）モジュール
-│   │   └── ...   ← その他のモジュール
-│   └── ...
+│   ├── @types    ← TypeScriptの型定義（*.d.ts。アンビエント）モジュール
+│   │   └── ...     （例えばjQueryの型定義ファイルなど）
+│   └── ...       ← その他のモジュール（例えばjQueryの本体モジュールなど）
 ├── package.json  ← npmのパッケージ定義ファイル（実際上依存性の宣言にのみ使用）
 ├── src           ← Mavenのディレクトリ構造
 │   ├── main
 │   │   └── resources
-│   │       ├── index.html
+│   │       ├── index.html          ← app.min.jsをロードするWebページ
 │   │       └── js
 │   │           ├── app.min.js      ← Browserifyにより生成されたバンドル
 │   │           ├── app.min.js.map  ← Browserifyにより生成されたソースマップ
