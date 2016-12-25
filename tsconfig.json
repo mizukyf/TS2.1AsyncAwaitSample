@@ -10,7 +10,7 @@
     "src/**/*"
   ],
   "exclude": [
-    "build",
+    "target",
     "node_modules"
   ]
 }

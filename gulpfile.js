@@ -54,7 +54,7 @@ gulp.task('watch', ['_watchExceptTs']);
 
 // *.tsファイルのトランスパイルと実行時依存性解決を行うタスク
 // NOTE: この実行に先立ち'_testTs'が実行される
-gulp.task('_bundleTs', ['_testTs'], _bundleTsTask(false));
+gulp.task('_bundleTs', _bundleTsTask(false));
 // リソースをターゲット・ディレクトリ（例：'target/classes'）にコピーするタスク
 // NOTE: ディレクトリが存在しない場合は何も行わない
 gulp.task('_copyAllResources', ['_bundleTs'], () => {
@@ -63,10 +63,18 @@ gulp.task('_copyAllResources', ['_bundleTs'], () => {
     .pipe(gulp.dest(paths.copiedResoucesDir));
   }
 });
+// *.tsファイルのトランスパイルだけを行うタスク
+// NOTE: '_bundleTs'と異なりこのタスクは実行時依存性の解決を行わない
+gulp.task('_xpileTs', () => {
+  return gulp.src(paths.srcMainAllTs)
+    .pipe(typescript(tsconfig.compilerOptions))
+    .pipe(gulp.dest(paths.srcMainJsDir));
+});
 // *.spec.tsファイルに記述されたテストを実行するタスク
-gulp.task('_testTs', () => {
+gulp.task('_testTs', ['_xpileTs'], () => {
   return gulp.src(paths.srtTestAllSpecTs)
     .pipe(typescript(tsconfig.compilerOptions))
+    .pipe(gulp.dest(paths.srcTest))
     .pipe(jasmine());
 });
 // *.tsファイル以外の変更を検知してコピーを実行するタスク
