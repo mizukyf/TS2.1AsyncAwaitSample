@@ -1,5 +1,5 @@
 import 'jasmine';
-import {Greeter} from '../../main/es/main';
+import {Greeter} from '../../../main/resources/js/main';
 
 describe('Greeter#messageは',() => {
   it('コンストラクタの第1引数として指定された文字列を返す', () => {
