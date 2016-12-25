@@ -14,7 +14,6 @@ var tsconfig = require('./tsconfig.json');
 var tsify = require('tsify');
 var typescript = require('gulp-typescript');
 var uglify = require('gulp-uglify');
-var watchify = require('watchify');
 var watch = require('gulp-watch');
 
 var paths = {
@@ -54,7 +53,7 @@ gulp.task('watch', ['_watchExceptTs']);
 
 // *.tsファイルのトランスパイルと実行時依存性解決を行うタスク
 // NOTE: この実行に先立ち'_testTs'が実行される
-gulp.task('_bundleTs', _bundleTsTask(false));
+gulp.task('_bundleTs', _bundleTsTask());
 // リソースをターゲット・ディレクトリ（例：'target/classes'）にコピーするタスク
 // NOTE: ディレクトリが存在しない場合は何も行わない
 gulp.task('_copyAllResources', ['_bundleTs'], () => {
@@ -92,9 +91,13 @@ gulp.task('_watchExceptTs', ['_watchTs'], () => {
 });
 // *.tsファイルの変更を検知してトランスパイルと実行時依存性解決を行うタスク
 // NOTE: ビルド処理は'_bundleTs'と同じ設定で行われる
-gulp.task('_watchTs', ['_copyAllResources'], _bundleTsTask(true));
+gulp.task('_watchTs', ['_copyAllResources'], () => {
+  var w = watch([
+    paths.srcMainAllTs
+  ], _bundleTsTask(true)).on('change', gutil.log);
+});
 
-function _bundleTsTask (watch) {
+function _bundleTsTask (watchMode) {
   // タスク本体となる関数を生成して呼び出し元に返す
   return () => {
     // Browserifyのインスタンスを初期化する
@@ -106,31 +109,26 @@ function _bundleTsTask (watch) {
     .plugin(tsify, tsconfig)
     .on('log', gutil.log);
 
-    // Browserifyにより実行時依存性解決されたJSファイルを
-    // UglifyJSやsourcemapsにより変換する
-    var f = () => b
-        .bundle()
-        .pipe(source(paths.bundledJsOutName))
-        .pipe(buffer())
-        .pipe(sourcemaps.init({loadMaps: true}))
-            .pipe(uglify())
-            .pipe(rename({suffix: '.min'}))
-            .on('error', gutil.log)
-        .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest(paths.bundledJsOutDir));
-
-    // buildTaskの第1引数にtrueが渡された場合
-    if (watch) {
-      // Watchifyプラグインを追加
-      // エラー発生時に監視が解除されないようリスナーを追加
-      // ファイル変更をトリガーにビルドが実施されるようリスナーを追加
-      b.plugin(watchify)
-      .on('error', (err) => { gutil.log(err); this.emit('end'); })
-      .on('update', f);
-    } else {
-      // それ以外の場合はただちにバンドルを行って終わり
-      f();
+    // Browserifyにより実行時依存性解決
+    b = b.bundle();
+    // 第1引数にtrueが指定されている場合はトランスパイルでエラーがあっても
+    // 監視状態が解除されないよう、エラー処理用イベント・リスナーを追加する
+    if (watchMode) {
+      b.on('error', function (err) {
+        gutil.log(err);
+        this.emit('end');
+      });
     }
+    // UglifyJSやsourcemapsにより変換する
+    return b
+      .pipe(source(paths.bundledJsOutName))
+      .pipe(buffer())
+      .pipe(sourcemaps.init({loadMaps: true}))
+          .pipe(uglify())
+          .pipe(rename({suffix: '.min'}))
+          .on('error', gutil.log)
+      .pipe(sourcemaps.write('./'))
+      .pipe(gulp.dest(paths.bundledJsOutDir));
   };
 }
 

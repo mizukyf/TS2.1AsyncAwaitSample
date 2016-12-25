@@ -5,6 +5,8 @@ import {polyfill} from 'es6-promise';
 // ポリフィルを有効化する
 polyfill();
 
+import {SubGreeter} from './sub';
+
 // コンソールにあいさつを出力するだけのクラス
 export class Greeter {
   constructor(public message : string) {
@@ -52,3 +54,6 @@ console.log("#2 in global.");
 g.greetAsync();
 // 非同期メソッドを呼び出した後のログ出力
 console.log("#3 in global.");
+
+var g2 = new SubGreeter('hello');
+g2.greet();
