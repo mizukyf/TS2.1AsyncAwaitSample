@@ -18,8 +18,8 @@ var watchify = require('watchify');
 var watch = require('gulp-watch');
 
 var paths = {
-  srcMain : 'src/main/resouces',
-  srcTest : 'src/test/resouces',
+  srcMain : 'src/main/resources',
+  srcTest : 'src/test/resources',
   targetMain : 'target/classes',
   targetTest : 'target/test-classes'
 };
@@ -68,11 +68,16 @@ gulp.task('_testTs', () => {
 });
 // *.tsファイル以外の変更を検知してコピーを実行するタスク
 gulp.task('_watchExceptTs', ['_watchTs'], () => {
-  return watch([
+  var w = watch([
     paths.srcMainAllResources,
     '!' + paths.srcMainAllTs
-  ])
-  .pipe(gulp.dest(paths.copiedResoucesDir));
+  ]).on('change', gutil.log);
+
+  if (fs.existsSync(paths.targetMain)) {
+    return w.pipe(gulp.dest(paths.copiedResoucesDir));
+  } else {
+    return w;
+  }
 });
 // *.tsファイルの変更を検知してトランスパイルと実行時依存性解決を行うタスク
 // NOTE: ビルド処理は'_bundleTs'と同じ設定で行われる
